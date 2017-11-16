@@ -2,6 +2,8 @@ import org.apache.commons.io.FileUtils;
 import org.openqa.selenium.*;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.interactions.Actions;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 import javax.swing.*;
 import java.io.File;
@@ -23,9 +25,11 @@ public class seleniumtestcase1 {
         driver.findElement(By.xpath(".//*[@id='pwd']")).sendKeys("Saki0608");
         driver.findElement(By.xpath(".//*[@id='login-btn']")).click();
         //close ads if exist
-        int ads = driver.findElements(By.cssSelector("button[ng-class='close']")).size();
+        driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
+        int ads = driver.findElements(By.className("close")).size();
         if (ads != 0) {
-            driver.findElement(By.cssSelector("button[ng-class='close']")).click();
+            driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
+            driver.findElement(By.className("close")).click();
         }
         //find the four bookmarks and make sure they exist
         int sidebarNav = driver.findElements(By.className("sidebar-nav")).size();
@@ -58,9 +62,17 @@ public class seleniumtestcase1 {
         driver.findElement(By.xpath("//*[@id='promote-stations']/div/ul/li[1]/div/div[1]")).click();
         driver.findElement(By.xpath("//*[@id='promote-stations']/div/ul/li[1]/div/div[1]")).click();
         driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
+        try{
+            WebDriverWait wait = new WebDriverWait(driver, 5);
+            wait.until(ExpectedConditions.alertIsPresent());
 
-        driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
-        driver.findElement(By.cssSelector("[ng-class*=disablesd]")).click();
+        Alert alert = driver.switchTo().alert();
+        alert.accept();
+        }catch (NoAlertPresentException noAlert) {
+            noAlert.getMessage();
+        }
+        driver.manage().timeouts().implicitlyWait(20, TimeUnit.SECONDS);
+        driver.findElement(By.cssSelector("[ng-click*=dislikeFeedback()")).click();
     }
 
 }
