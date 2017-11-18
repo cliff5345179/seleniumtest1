@@ -8,6 +8,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import javax.swing.*;
 import java.io.File;
 import java.io.IOException;
+import java.util.NoSuchElementException;
 import java.util.concurrent.TimeUnit;
 
 public class seleniumtestcase1 {
@@ -71,8 +72,15 @@ public class seleniumtestcase1 {
         }catch (NoAlertPresentException noAlert) {
             noAlert.getMessage();
         }
-        driver.manage().timeouts().implicitlyWait(20, TimeUnit.SECONDS);
-        driver.findElement(By.cssSelector("[ng-click*=dislikeFeedback()")).click();
+        try {
+            WebDriverWait wait = new WebDriverWait(driver, 5);
+            wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath(".//*[@id='pauseBtn']")));
+            Thread.sleep(3000);
+
+            driver.findElement(By.cssSelector("[ng-click*=dislike]")).click();
+        }catch (NoSuchElementException notPlaying){
+            notPlaying.getMessage();
+        }
     }
 
 }
