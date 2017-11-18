@@ -38,11 +38,17 @@ public class seleniumtestcase1 {
         driver.findElement(By.xpath(".//*[@id='pwd']")).sendKeys("Saki0608");
         driver.findElement(By.xpath(".//*[@id='login-btn']")).click();
 
+        // initiate mouse hover action
+        Actions action = new Actions(driver);
+
         //close ads if exist
         driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
         int ads = driver.findElements(By.className("close")).size();
         if (ads != 0) {
+            Thread.sleep(3000);
             driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
+            WebElement closeAds = driver.findElement(By.className("close"));
+            action.moveToElement(closeAds).perform();
             driver.findElement(By.className("close")).click();
         }
 
@@ -78,10 +84,11 @@ public class seleniumtestcase1 {
         driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
 
         //target String
-        String target = "王菲&鄧麗君 (Faye Wong & Teresa Teng) - 清平調 搶先聽";
+        String target = "王菲&鄧麗君 (Faye Wong & Teresa Teng)";
+        Thread.sleep(3000);
 
         //get actual target
-        String check =driver.findElement(By.xpath("//*[@id='container']/div[2]/div/div[1]/div/div/div/div/div[2]/ol/li[2]/div/div[2]/h3/a")).getText();
+        String check =driver.findElement(By.cssSelector("[ng-click*=artist")).getText();
         result = check;
         write.writerTxt(result);
 
@@ -109,21 +116,21 @@ public class seleniumtestcase1 {
         isRadioPlaying Playing = new isRadioPlaying();
         Boolean checkPlaying = Playing.isRadioPlaying(driver);
 
-        // initiate mouse hover action
-        Actions action = new Actions(driver);
+
         //find radio image in advance
-        WebElement element = driver.findElement(By.xpath("//*[@id='promote-stations']/div/ul/li[1]/div/div[1]"));
+        WebElement radio_image = driver.findElement(By.className("img-wrap"));
 
         //Play radio with check playing
         while (!checkPlaying) {
             driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
 
             // hover on image so button will show
-            action.moveToElement(element).build().perform();
+            action.moveToElement(radio_image).build().perform();
 
             //press radio play button
-            driver.findElement(By.xpath("//*[@id='promote-stations']/div/ul/li[1]/div/div[1]/div/a")).click();
+            driver.findElement(By.className("btn-radio")).click();
             driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
+            Thread.sleep(2000);
 
             // check if playing is true
             checkPlaying = Playing.isRadioPlaying(driver);
@@ -135,7 +142,7 @@ public class seleniumtestcase1 {
         write.writerTxt(result);
 
         //sleep a while
-        Thread.sleep(3000);
+        Thread.sleep(2000);
 
         //press dislike
         driver.findElement(By.xpath("//*[@title = '不喜歡']")).click();
