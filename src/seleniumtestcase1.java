@@ -28,29 +28,33 @@ public class seleniumtestcase1 {
         SimpleDateFormat sdFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss.SSS");
         Date current = new Date();
         String result = String.valueOf(current);
+        String description = "";
         write.writerTxt(result);
 
         /**
          * start of test case 1
          */
         //login
-        driver.findElement(By.xpath(".//*[@id='uid']")).sendKeys("cliff5345179@gmail.com");
-        driver.findElement(By.xpath(".//*[@id='pwd']")).sendKeys("Saki0608");
-        driver.findElement(By.xpath(".//*[@id='login-btn']")).click();
+        String id = "cliff5345179@gmail.com";
+        String pwd = "Saki0608";
+        Login logincheck = new Login();
+        Boolean checklogin = logincheck.Logincheck(driver, id, pwd);
+
+        if (checklogin ==false){
+            result ="test case 1 'failed'";
+            description ="login unsuccessful";
+            write.writerTxt(result);
+            write.writerTxt(description);
+        }
 
         // initiate mouse hover action
         Actions action = new Actions(driver);
 
         //close ads if exist
         driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
-        int ads = driver.findElements(By.className("close")).size();
-        if (ads != 0) {
-            Thread.sleep(3000);
-            driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
-            WebElement closeAds = driver.findElement(By.className("close"));
-            action.moveToElement(closeAds).perform();
-            driver.findElement(By.className("close")).click();
-        }
+        CloseAdsifExist AdsifExist = new CloseAdsifExist();
+        AdsifExist.CloseAds(driver);
+
 
         //find the four bookmarks and make sure they exist
         int sidebarNav = driver.findElements(By.className("sidebar-nav")).size();
@@ -64,12 +68,21 @@ public class seleniumtestcase1 {
              * end of test case 1
              */
             if (cpl != 0 && explore != 0 && radio != 0 && listen_with != 0) {
-                result = "test case 1 pass";
+                result = "test case 1 'pass'";
                 write.writerTxt(result);
             } else {
-                result = "test case 1 failed";
+                result = "test case 1 'failed'";
+                description = "Didn't find all four elements";
                 write.writerTxt(result);
+                write.writerTxt(description);
             }
+        }
+        else{
+            result = "test case 1 'failed'";
+            write.writerTxt(result);
+            description = "no left panel";
+            write.writerTxt(result);
+            write.writerTxt(description);
         }
 
         /**
@@ -88,20 +101,21 @@ public class seleniumtestcase1 {
         Thread.sleep(3000);
 
         //get actual target
-        String check =driver.findElement(By.cssSelector("[ng-click*=artist")).getText();
-        result = check;
-        write.writerTxt(result);
+        ArtistExistCheck checkArtist = new ArtistExistCheck();
+        Boolean Artistcheck = checkArtist.ArtistExist(driver, target);
 
         /**
          * end of test case 2
          */
-        if (target.equals(check)) {
-            result = "test case 2 pass";
+        if (Artistcheck == true) {
+            result = "test case 2 'pass'";
             write.writerTxt(result);
         }
         else{
-            result = "test case 2 failed";
+            result = "test case 2 'failed'";
+            description ="didn't find the song";
             write.writerTxt(result);
+            write.writerTxt(description);
         }
 
         /**
@@ -132,8 +146,20 @@ public class seleniumtestcase1 {
             driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
             Thread.sleep(2000);
 
+            //check ads
+            AdsifExist.CloseAds(driver);
+
             // check if playing is true
             checkPlaying = Playing.isRadioPlaying(driver);
+            int count = 0;
+            count++;
+            if (count > 3){
+                result = "test case 3 'failed'";
+                description = "cannot play radio";
+                write.writerTxt(result);
+                write.writerTxt(description);
+                break;
+            }
         }
 
         //record orginal song
@@ -163,11 +189,11 @@ public class seleniumtestcase1 {
          * end of test case 3
          */
         if (beforeDislike.equals(afterDislike)){
-            result = "test case 3 failed";
+            result = "test case 3 'failed'";
             write.writerTxt(result);
         }
         else{
-            result = "test case 3 pass";
+            result = "test case 3 'pass'";
             write.writerTxt(result);
         }
 
