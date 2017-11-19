@@ -12,9 +12,10 @@ public class CloseAdsifExist {
         int ads = driver.findElements(By.className("close")).size();
 
         if (ads != 0) {
-            Thread.sleep(3000);
+            Thread.sleep(1000);
             driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
             WebElement closeAds = driver.findElement(By.className("close"));
+            Thread.sleep(1000);
             action.moveToElement(closeAds).perform();
             driver.findElement(By.className("close")).click();
         }

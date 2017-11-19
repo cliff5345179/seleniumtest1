@@ -6,7 +6,7 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import javax.swing.*;
-import java.io.File;
+import java.io.*;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -17,6 +17,16 @@ public class seleniumtestcase1 {
 
 
     public static void main(String[] args) throws IOException, InterruptedException {
+
+        //input test id & password
+        BufferedReader buf = new BufferedReader(new InputStreamReader(System.in));
+        System.out.println("input the uid you want to test:");
+        String id = buf.readLine();
+        System.out.println("input pwd:");
+        String pwd = buf.readLine();
+        System.out.println("starting web driver, please wait...");
+        System.out.println("Test log will be stored in log.txt...");
+
         //setup web driver
         System.setProperty("webdriver.gecko.driver", "geckodriver.exe");
         FirefoxDriver driver = new FirefoxDriver();
@@ -30,20 +40,18 @@ public class seleniumtestcase1 {
         String result = String.valueOf(current);
         String description = "";
         write.writerTxt(result);
+        write.writerTxt(id);
+        write.writerTxt(pwd);
 
         /**
          * start of test case 1
          */
         //login
-        String id = "cliff5345179@gmail.com";
-        String pwd = "Saki0608";
         Login logincheck = new Login();
         Boolean checklogin = logincheck.Logincheck(driver, id, pwd);
 
         if (checklogin ==false){
-            result ="test case 1 'failed'";
             description ="login unsuccessful";
-            write.writerTxt(result);
             write.writerTxt(description);
         }
 
@@ -75,6 +83,7 @@ public class seleniumtestcase1 {
                 description = "Didn't find all four elements";
                 write.writerTxt(result);
                 write.writerTxt(description);
+
             }
         }
         else{
@@ -83,6 +92,7 @@ public class seleniumtestcase1 {
             description = "no left panel";
             write.writerTxt(result);
             write.writerTxt(description);
+
         }
 
         /**
@@ -134,8 +144,19 @@ public class seleniumtestcase1 {
         //find radio image in advance
         WebElement radio_image = driver.findElement(By.className("img-wrap"));
 
+        int count = 0;
         //Play radio with check playing
         while (!checkPlaying) {
+
+            count++;
+
+            //can't close ads if using expired free account
+            // or can't play radio for other reasons
+            // break so we don't stuck forever!
+            if (count > 3){
+                break;
+            }
+
             driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
 
             // hover on image so button will show
@@ -151,15 +172,11 @@ public class seleniumtestcase1 {
 
             // check if playing is true
             checkPlaying = Playing.isRadioPlaying(driver);
-            int count = 0;
-            count++;
-            if (count > 3){
-                result = "test case 3 'failed'";
-                description = "cannot play radio";
-                write.writerTxt(result);
-                write.writerTxt(description);
-                break;
-            }
+        }
+        checkPlaying = Playing.isRadioPlaying(driver);
+        if (checkPlaying == false){
+            description = "Radio not playing, using expired free account?";
+            write.writerTxt(description);
         }
 
         //record orginal song
@@ -178,6 +195,15 @@ public class seleniumtestcase1 {
         checkPlaying = Playing.isRadioPlaying(driver);
         while (!checkPlaying){
             checkPlaying = Playing.isRadioPlaying(driver);
+
+            count++;
+
+            //can't close ads if using expired free account
+            // or can't play radio for other reasons
+            // break so we don't stuck forever!
+            if (count > 3){
+                break;
+            }
         }
 
         //record song afterwards
@@ -190,7 +216,9 @@ public class seleniumtestcase1 {
          */
         if (beforeDislike.equals(afterDislike)){
             result = "test case 3 'failed'";
+            description = "dislike button don't work";
             write.writerTxt(result);
+            write.writerTxt(description);
         }
         else{
             result = "test case 3 'pass'";
@@ -199,6 +227,7 @@ public class seleniumtestcase1 {
 
         //all done!
         driver.quit();
+
     }
 
 }

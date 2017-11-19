@@ -11,7 +11,7 @@ public class reportwriter {
         this.result = result;
         BufferedWriter fw = null;
 
-            File file = new File("log.txt");
+            File file = new File("testlog.txt");
             try {
                 fw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file, true), "UTF-8")); // 指點編碼格式，以免讀取時中文字符異常
                 fw.append(result);

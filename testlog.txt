@@ -1,0 +1,18 @@
+Mon Nov 20 05:00:02 CST 2017
+cliff5345179@gmail.com
+Saki0608
+test case 1 'pass'
+test case 2 'pass'
+before dislike:
+after dislike:
+test case 3 'failed'
+Mon Nov 20 05:06:44 CST 2017
+cliff5345179@gmail.com
+Saki0608
+test case 1 'pass'
+test case 2 'pass'
+Radio not playing, using expired free account?
+before dislike:
+after dislike:
+test case 3 'failed'
+dislike button don't work
